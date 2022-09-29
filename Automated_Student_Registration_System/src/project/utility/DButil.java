@@ -17,7 +17,7 @@ public class DButil {
 			e.printStackTrace();
 		}
 		
-		String url = "jdbc:mysql://localhost:3306/web19sb101db";
+		String url = "jdbc:mysql://localhost:3306/automatedStudentRegistration";
 		
 		try {
 			conn = DriverManager.getConnection(url, "root", "netflix123");

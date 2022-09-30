@@ -36,26 +36,34 @@ public class RegisterStudentCourseBatch {
 			Boolean ans = daoObj.checkForStudent(sEmail, sPassword);
 			if(!ans) {
 				daoObj.registerStudent(s);
+				System.out.println();
 				System.out.println("Student with e-mail "+ sEmail +" registstered successfully");
-				
+				System.out.println();
 				System.out.println("Enter course name you want to join:");
-				List<Course> listOfCourses = daoObj.getListOfCourses();
 				
 				System.out.println("List of courses available");
-				listOfCourses.forEach(c -> {
-					System.out.println(c.getcId() +" -> "+ c.getCname());
-				});
-				System.out.println("Enter the name of the course name you want to join:");
-
-				String sDecision2 = sc.next();
-				int cId = daoObj.getCourseId(sDecision2);
 				
-				if(daoObj.checkForCourse(sDecision2)) {
-					daoObj.registerBatch(cId, sDecision2, sEmail);
+				System.out.println("Enter yes to join a course. ");
+				System.out.println("Enter no to quit");
+				String opt = sc.next();
+				
+				if(opt.equalsIgnoreCase("yes")) {
+					daoObj.displayCourseAvailableWithOrWithoutSeats("includeslno");
+
+					System.out.println("Enter the name of the course name you want to join:");
+
+					String sDecision2 = sc.next().toUpperCase();
+					int cId = daoObj.getCourseId(sDecision2);
+					
+					if(daoObj.checkForCourse(sDecision2)) {
+						daoObj.registerBatch(cId, sDecision2, sEmail);
+					}
+					else {
+						System.out.println("Such course "+ sDecision2 +" doesn't exist");
+						
+					}
 				}
-				else {
-					System.out.println("such course doesn't exist");
-				}
+				else throw new CourseException("Have a nice day " +sName);
 				
 			}
 			else System.out.println("student already exists");
@@ -66,6 +74,9 @@ public class RegisterStudentCourseBatch {
 			System.out.println(e1.getMessage());
 		} catch (CourseException e1) {
 			System.out.println(e1.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+
 		}
 	}
 		catch(InputMismatchException e) {

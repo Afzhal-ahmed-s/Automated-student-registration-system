@@ -44,19 +44,19 @@ sEmail varchar(25),
 
 foreign key (cId) references courses(cId) ON DELETE CASCADE,
 foreign key (sEmail) references students(sEmail) ON DELETE CASCADE,
-foreign key (batchNo) references batchSeats (bId)
+foreign key (batchNo) references batchSeats (bId) ON DELETE CASCADE
 );
 
-insert into courses values (1, 'Java', 5000,'backend');
+insert into courses values (1, 'JAVA', 5000,'backend');
 insert into courses values (2, 'ML', 6000,'extra course');
 insert into courses values (3, 'AI', 7000,'extra course');
 
-insert into batchSeats values (1, 1, 5, 0);
-insert into batchSeats values (2, 2, 5, 0);
-insert into batchSeats values (3, 3, 5, 0);
+insert into batchSeats values (1, 1, 3, 0);
+insert into batchSeats values (2, 2, 3, 0);
+insert into batchSeats values (3, 3, 3, 0);
+insert into batchSeats values (4, 1, 2, 0);
 
-
-
+update batchSeats set seatsFilled = (seatsFilled + 1) where cId = 3 AND bId = 3 ;
 
 
 

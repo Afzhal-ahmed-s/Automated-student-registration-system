@@ -1,8 +1,10 @@
 package project.clientSide;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
+import project.bean.Course;
 import project.bean.Student;
 import project.dao.dao;
 import project.dao.daoImpl;
@@ -46,13 +48,23 @@ public class ClientSide {
 
 				}
 				case 3: {
-					System.out.println("Enter course to delete:");
+					List<Course> lisOfCourses = daoObj.getListOfCourses();
+					System.out.println("List of courses-");
+					lisOfCourses.forEach(c ->{
+						System.out.println(c.getCname());
+					});
+					System.out.println("Enter course name to delete:");
 					String cName = sc.next();
 					daoObj.adminDeleteCourse(cName);
 					break;
 
 				}
 				case 4: {
+					List<Course> lisOfCourses = daoObj.getListOfCourses();
+					System.out.println("List of courses-");
+					lisOfCourses.forEach(c ->{
+						System.out.println(c.getCname());
+					});
 					System.out.println("Enter course name to get it's information");
 					String cName = sc.next();
 					daoObj.adminDisplayCourseInfo(cName);

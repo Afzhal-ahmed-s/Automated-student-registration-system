@@ -27,7 +27,7 @@ public class LoginStudent {
 			boolean isStudentPresent = daoObj.checkForStudent(sEmail, sPassword);
 			
 			if(isStudentPresent) {
-				System.out.println("Welcome "+ sEmail);
+				System.out.println("Welcome "+ daoObj.getSNameFromEmail(sEmail));
 				System.out.println("Please select-");
 				System.out.println("1. Update my details");
 				System.out.println("2. View all available courses and seat availability");
@@ -36,8 +36,9 @@ public class LoginStudent {
 				if(opt == 1) {
 					System.out.println("Enter your new password:");
 					String sNewPassword = sc.next();
+					sc.nextLine();
 					System.out.println("Enter your new name:");
-					String sNewName = sc.next();
+					String sNewName = sc.nextLine();
 					daoObj.editStudentProfile(sEmail, sNewPassword, sNewName);
 					
 					System.out.println("Enter yes to change course:");

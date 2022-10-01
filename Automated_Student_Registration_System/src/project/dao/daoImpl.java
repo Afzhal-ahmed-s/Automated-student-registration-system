@@ -9,6 +9,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import project.bean.Admin;
 import project.bean.BatchRecordDTO;
 import project.bean.Course;
 import project.bean.Student;
@@ -51,6 +52,8 @@ public class daoImpl implements dao{
 		int ltotalSeats;
 		int lseatsFilled;
 		int fbatchId;
+		
+		dao daoObj = new daoImpl();
 
 		try(Connection conn = DButil.getConnection()){
 			
@@ -84,11 +87,11 @@ public class daoImpl implements dao{
 					ps2.setString(3, sEmail);
 					int x = ps2.executeUpdate();
 					
-					System.out.println("Student with e-mail "+ sEmail +" registered into course "+ cName );
+					System.out.println("Student"+ daoObj.getSNameFromEmail(sEmail) +"with e-mail "+ sEmail +" registered into course "+ cName );
 				}
 			}
 			if(!flag) {
-				System.out.println("Seats not available for course " + cName +" (or) batch not allocated for the course yet.");
+				throw new CourseException("Seats not available for course " + cName +" (or) batch not allocated for the course yet.");
 
 			}
 			
@@ -178,7 +181,6 @@ public class daoImpl implements dao{
 		catch(SQLException e) {
 			throw new SQLException(e.getMessage());
 		}
-		System.out.println("answer: "+answer);
 		return answer;
 	}
 
@@ -425,8 +427,11 @@ public class daoImpl implements dao{
 
 	@Override
 	public boolean checkForAdmin() {
-		String lAName = "a";
-		String lApassword = "qwe";
+		
+		List<Admin> listOfAdmins = new ArrayList<>();
+		listOfAdmins.add(new Admin("Afzhal", "netflix"));
+		listOfAdmins.add(new Admin("a", "qwe"));
+		boolean isPresent = false;
 		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Login to profile-");
@@ -434,13 +439,22 @@ public class daoImpl implements dao{
 		String aName = sc.next();
 		System.out.println("Enter your password: ");
 		String aPassword = sc.next();
-		boolean answer = false;
-		if(aName.compareToIgnoreCase(lAName)==0 && aPassword.compareTo(lApassword)==0)answer = true;
-		return answer;
+		
+		Admin ad = new Admin(aName, aPassword);
+		
+//		listOfAdmins.forEach(s -> {
+//			if(s.getName().equalsIgnoreCase(aName) && s.getPassword().equals(aPassword))isPresent=true;
+//		});
+		
+		if(listOfAdmins.contains(ad))isPresent=true;
+		
+		return isPresent;
 	}
+
 
 	@Override
 	public void displayOptionsForAdmin() {
+		System.out.println();
 		System.out.println("Welcome Admin!");
 		System.out.println();
 		System.out.println("Enter number to perform actions:");
@@ -616,27 +630,33 @@ public class daoImpl implements dao{
 		
 		try(Connection conn = DButil.getConnection()){
 			List<Student> listOfStudents = daoObj.getListOfStudents();
-			System.out.println("List of students in our institution-");
-			System.out.println();
-			listOfStudents.forEach(s -> System.out.println(s));
-			System.out.println();
-			System.out.println("Process to allocate student under a abatch in a acourse starts.");
-			System.out.println("Enter the Student E-mail: ");
-			String sEmail = sc.next();
-			String sPassword = daoObj.getStudentPassword(sEmail);
-			
-			boolean existence = daoObj.checkForStudent(sEmail, sPassword);
-			
-			if(existence) {
-				System.out.println("Enter course name to allocate into batch othe course:");
-				daoObj.displayCourseAvailableWithOrWithoutSeats("includeslno");
-				String cName = sc.next();
-				int cId = daoObj.getCourseId(cName);
+			if(listOfStudents.size()==0)System.out.println("No student has enrolled yet.");
+			else {
 				
-				daoObj.registerBatch(cId, cName, sEmail);
+				System.out.println("List of students in our institution-");
+				System.out.println();
+				listOfStudents.forEach(s -> System.out.println(s));
+				System.out.println();
+				System.out.println("Process to allocate student under a abatch in a acourse starts.");
+				System.out.println("Enter the Student E-mail: ");
+				String sEmail = sc.next();
+				String sPassword = daoObj.getStudentPassword(sEmail);
+				
+				boolean existence = daoObj.checkForStudent(sEmail, sPassword);
+				
+				if(existence) {
+					System.out.println("Enter course name to allocate into batch othe course:");
+					daoObj.displayCourseAvailableWithOrWithoutSeats("includeslno");
+					String cName = sc.next();
+					int cId = daoObj.getCourseId(cName);
+					
+					daoObj.registerBatch(cId, cName, sEmail);
+					
+				}
+				else throw new StudentException("Student "+ daoObj.getSNameFromEmail(sEmail) +" with e-mail "+ sEmail + " not found");
 				
 			}
-			else throw new StudentException("Student "+ daoObj.getSNameFromEmail(sEmail) +" with e-mail "+ sEmail + " not found");
+			
 			
 			
 		}
@@ -709,15 +729,30 @@ public class daoImpl implements dao{
 		
 		
 		try(Connection conn = DButil.getConnection()){
-			System.out.println("Enter Batch number:");
-			int bId = sc.nextInt();
-			System.out.println("Enter new capacity of seats:");
-			int newTotalSeats = sc.nextInt();
-			PreparedStatement ps = conn.prepareStatement("update batchSeats set totalSeats = ? where bId = ?");
-			ps.setInt(1, newTotalSeats);
-			ps.setInt(2, bId);
-			ps.executeUpdate();
-			System.out.println("BatchID "+ bId +" updated to seat capacity "+newTotalSeats);
+			dao daoObj = new daoImpl();
+			
+			List<batchSeatDTO> listOfBatchSeatDetails = daoObj.getBatchSeatdetails();
+			
+			if(listOfBatchSeatDetails.size()==0) {
+				System.out.println("There are no batches created yet. Please create one to edit it.");
+			}
+			else {
+				System.out.println("Batches available:");
+				listOfBatchSeatDetails.forEach(b -> {
+					System.out.println(b.getbId());
+				});
+				System.out.println();
+				System.out.println("Enter Batch number:");
+				int bId = sc.nextInt();
+				System.out.println("Enter new capacity of seats:");
+				int newTotalSeats = sc.nextInt();
+				PreparedStatement ps = conn.prepareStatement("update batchSeats set totalSeats = ? where bId = ?");
+				ps.setInt(1, newTotalSeats);
+				ps.setInt(2, bId);
+				ps.executeUpdate();
+				System.out.println("BatchID "+ bId +" updated to seat capacity "+newTotalSeats);
+			}
+			
 		}	
 		catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -734,14 +769,21 @@ public class daoImpl implements dao{
 		try(Connection conn = DButil.getConnection()){
 			PreparedStatement ps = conn.prepareStatement("select batchNo, sEmail from batch order by batchNo");
 			ResultSet rs = ps.executeQuery();
-			System.out.println("BatchNo. -> Student name");
+			boolean isEmpty = true;
 			while(rs.next()) {
+				if(isEmpty)System.out.println("BatchNo. -> Student name");
+				isEmpty = false;
+
 				int batchNo = rs.getInt("batchNo");
 				String sEmail = rs.getString("sEmail");
 				System.out.println(batchNo +" -> "+ daoObj.getSNameFromEmail(sEmail));
 			}
-			System.out.println();
-			System.out.println("All batches along with their students displayed.");
+			if(isEmpty)System.out.println("No students available in a batch (or) no batches available. Please check for these conditions.");
+			else {
+				System.out.println();
+				System.out.println("All batches along with their students displayed.");
+			}
+
 		}
 		catch (SQLException e) {
 			System.out.println(e.getMessage());

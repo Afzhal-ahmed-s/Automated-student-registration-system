@@ -37,17 +37,15 @@ public class RegisterStudentCourseBatch {
 			if(!ans) {
 				daoObj.registerStudent(s);
 				System.out.println();
-				System.out.println("Student"+ sName +"with e-mail "+ sEmail +" registstered successfully");
+				System.out.println("Student "+ sName +" with e-mail "+ sEmail +" registstered successfully");
 				System.out.println();
-				System.out.println("Enter course name you want to join:");
-				
-				System.out.println("List of courses available");
-				
+								
 				System.out.println("Enter yes to join a course. ");
 				System.out.println("Enter no to quit");
 				String opt = sc.next();
 				
 				if(opt.equalsIgnoreCase("yes")) {
+					System.out.println("List of courses available:");
 					daoObj.displayCourseAvailableWithOrWithoutSeats("includeslno");
 
 					System.out.println("Enter the name of the course name you want to join:");
@@ -63,7 +61,7 @@ public class RegisterStudentCourseBatch {
 						
 					}
 				}
-				else throw new CourseException("Have a nice day " +sName);
+				else throw new CourseException("Have a nice day " +sName +" .");
 				
 			}
 			else System.out.println("student already exists");

@@ -9,9 +9,10 @@ select * from students;
 select * from batch;
 select * from batchSeats;
 
--- Delete section
+-- **CAUTION Delete section**
 drop database automatedStudentRegistration;
 
+-- Table creation
 create table courses
 (
 cId int primary key,
@@ -47,6 +48,7 @@ foreign key (sEmail) references students(sEmail) ON DELETE CASCADE,
 foreign key (batchNo) references batchSeats (bId) ON DELETE CASCADE
 );
 
+-- Queries for project demo 
 insert into courses values (1, 'JAVA', 5000,'backend');
 insert into courses values (2, 'ML', 6000,'extra course');
 insert into courses values (3, 'AI', 7000,'extra course');
@@ -56,7 +58,6 @@ insert into batchSeats values (2, 2, 3, 0);
 insert into batchSeats values (3, 3, 3, 0);
 insert into batchSeats values (4, 1, 2, 0);
 
-update batchSeats set seatsFilled = (seatsFilled + 1) where cId = 3 AND bId = 3 ;
 
 
 

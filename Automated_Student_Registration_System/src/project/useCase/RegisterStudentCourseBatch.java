@@ -37,7 +37,7 @@ public class RegisterStudentCourseBatch {
 			if(!ans) {
 				daoObj.registerStudent(s);
 				System.out.println();
-				System.out.println("Student with e-mail "+ sEmail +" registstered successfully");
+				System.out.println("Student"+ sName +"with e-mail "+ sEmail +" registstered successfully");
 				System.out.println();
 				System.out.println("Enter course name you want to join:");
 				

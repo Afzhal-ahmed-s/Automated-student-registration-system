@@ -97,11 +97,11 @@ public class ClientSide {
 			LoginStudent ls = new LoginStudent();
 		}
 
-		else System.out.println("Please enter valid input 1 (or) 2");
+		else System.out.println("Please enter valid input 1, 2 or 3");
 		
 		}
 		catch(InputMismatchException ime) {
-			System.out.println("Please enter valid input 1 (or) 2");
+			System.out.println("Please enter valid input");
 		}
 		
 		

@@ -38,4 +38,5 @@ public interface dao {
 	public void adminUpdateTotalSeatsOfaBatch();
 	public void adminViewStudentsOfEveryBatch();
 	public List<String> getSEmailListFromBatchWhoIsIntoACourse();
+	public String getSNameFromEmail (String sEmail);
 }

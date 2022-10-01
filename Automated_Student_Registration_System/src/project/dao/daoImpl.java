@@ -289,6 +289,8 @@ public class daoImpl implements dao{
 	@Override
 	public void editStudentProfile(String sEmail, String nSPassword, String nSName) throws SQLException {
 		
+		dao daoObj = new daoImpl();
+
 		try(Connection conn = DButil.getConnection()){
 			
 				PreparedStatement ps = conn.prepareStatement("update students set sPassword = ?, sName = ? where sEmail = ? ");
@@ -296,7 +298,7 @@ public class daoImpl implements dao{
 				ps.setString(2, nSName);
 				ps.setString(3, sEmail);
 				ps.executeUpdate();
-				System.out.println("Student with e-mail "+ sEmail +" updated with new password and name");
+				System.out.println("Student "+ daoObj.getSNameFromEmail(sEmail) +" with e-mail "+ sEmail +" updated with new password and name");
 				
 			}
 		catch (SQLException e) {
@@ -490,7 +492,7 @@ public class daoImpl implements dao{
 			
 			int x = ps.executeUpdate();
 			
-			System.out.println("Course "+ cName +" inserted into database");
+			System.out.println("Course "+ cName +" inserted into database successfully.");
 
 		}
 		catch (SQLException e) {
@@ -513,7 +515,7 @@ public class daoImpl implements dao{
 			ps.setInt(2, cId);
 			ps.executeUpdate();
 			
-			System.out.println("Course "+cName +" is updated with fees "+ fees);
+			System.out.println("Course "+cName +" is updated with fees "+ fees+".");
 			
 		}
 		catch (SQLException e) {
@@ -539,6 +541,7 @@ public class daoImpl implements dao{
 			ps.executeUpdate();
 			
 			System.out.println(cName + " course deleted successfully.");
+			System.out.println(cName + " deleted in every training session.");
 		}
 		catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -565,6 +568,7 @@ public class daoImpl implements dao{
 				String cNamel = rs.getString("cName");
 				int fees = rs.getInt("fees");
 				String cInfo = rs.getString("cInfo");
+				System.out.println("The course information for course name you asked for-");
 				System.out.println("Course information for "+ cName +" course-");
 				System.out.println("CourseID: "+ cIdl);
 				System.out.println("Course Name: "+ cNamel);
@@ -616,7 +620,7 @@ public class daoImpl implements dao{
 			System.out.println();
 			listOfStudents.forEach(s -> System.out.println(s));
 			System.out.println();
-			System.out.println("Student allocation to batch under a course process-  ");
+			System.out.println("Process to allocate student under a abatch in a acourse starts.");
 			System.out.println("Enter the Student E-mail: ");
 			String sEmail = sc.next();
 			String sPassword = daoObj.getStudentPassword(sEmail);
@@ -632,7 +636,7 @@ public class daoImpl implements dao{
 				daoObj.registerBatch(cId, cName, sEmail);
 				
 			}
-			else throw new StudentException("Student with e-mail "+ sEmail + " not found");
+			else throw new StudentException("Student "+ daoObj.getSNameFromEmail(sEmail) +" with e-mail "+ sEmail + " not found");
 			
 			
 		}
@@ -678,7 +682,7 @@ public class daoImpl implements dao{
 
 	@Override
 	public String getStudentPassword(String sEmail) throws StudentException {
-		
+		dao daoObj = new daoImpl();
 		String answer = null;
 		try(Connection conn = DButil.getConnection()){
 			PreparedStatement ps = conn.prepareStatement("select sPassword from students where sEmail = ?");
@@ -688,7 +692,7 @@ public class daoImpl implements dao{
 			if(rs.next()) {
 				answer = rs.getString("sPassword"); 
 			}
-			else throw new StudentException("Student with E-mail "+ sEmail +" does not exists");
+			else throw new StudentException("Student "+  daoObj.getSNameFromEmail(sEmail) +" with E-mail "+ sEmail +" does not exists");
 		}
 		catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -725,15 +729,16 @@ public class daoImpl implements dao{
 
 	@Override
 	public void adminViewStudentsOfEveryBatch() {
-
+		
+		dao daoObj = new daoImpl();
 		try(Connection conn = DButil.getConnection()){
 			PreparedStatement ps = conn.prepareStatement("select batchNo, sEmail from batch order by batchNo");
 			ResultSet rs = ps.executeQuery();
-			System.out.println("BatchNo. -> Student E-mail");
+			System.out.println("BatchNo. -> Student name");
 			while(rs.next()) {
 				int batchNo = rs.getInt("batchNo");
 				String sEmail = rs.getString("sEmail");
-				System.out.println(batchNo +" -> "+ sEmail);
+				System.out.println(batchNo +" -> "+ daoObj.getSNameFromEmail(sEmail));
 			}
 			System.out.println();
 			System.out.println("All batches along with their students displayed.");
@@ -764,6 +769,29 @@ public class daoImpl implements dao{
 			System.out.println(e.getMessage());
 		} 
 		return SEmailListFromBatchWhoIsIntoACourse;
+	}
+
+	@Override
+	public String getSNameFromEmail(String sEmail) {
+		String name = null;
+		
+		try(Connection conn = DButil.getConnection()){
+			PreparedStatement ps = conn.prepareStatement("select sName from students where sEmail = ?");
+			ps.setString(1, sEmail);
+			ResultSet rs= ps.executeQuery();
+			
+			if(rs.next()) {
+				name = rs.getString("sName");
+			}
+			else throw new StudentException("Student with e-mail "+ sEmail+" does not exists");
+		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} catch (StudentException e) {
+			System.out.println(e.getMessage());
+		} 
+		
+		return name;
 	}
 	
 	

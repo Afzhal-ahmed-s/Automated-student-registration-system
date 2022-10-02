@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DButil {
 
-	public static Connection getConnection() {
+	public static Connection getConnection() throws SQLException {
 		
 		Connection conn = null;
 		
@@ -23,11 +23,12 @@ public class DButil {
 			conn = DriverManager.getConnection(url, "root", "netflix123");
 		} 
 		catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException(e.getMessage());
 		}
 		
 		
 		return conn;
 	}
+	
 
 }

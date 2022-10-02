@@ -8,6 +8,14 @@ import project.bean.Course;
 import project.bean.Student;
 import project.dao.dao;
 import project.dao.daoImpl;
+import project.useCase.AdminAddNewCourse;
+import project.useCase.AdminAllocateStudentsInaBatchUnderaCourse;
+import project.useCase.AdminCreatBatchunderaCourse;
+import project.useCase.AdminDeleteCourse;
+import project.useCase.AdminDisplayCourseInfo;
+import project.useCase.AdminUpdateFeesOfCourse;
+import project.useCase.AdminUpdateTotalSeatsOfaBatch;
+import project.useCase.AdminViewStudentsOfEveryBatch;
 import project.useCase.LoginStudent;
 import project.useCase.RegisterStudentCourseBatch;
 
@@ -35,62 +43,38 @@ public class ClientSide {
 				
 				switch (aOpt) {
 				case 1: {
-					daoObj.adminAddNewCourse();
+					AdminAddNewCourse a = new AdminAddNewCourse();
 					break;
 				}
 				case 2: {
-					System.out.println("Enter Course name: ");
-					String cName = sc.next();
-					System.out.println("Enter fees to update:");
-					int fees = sc.nextInt();
-					daoObj.adminUpdateFeesOfCourse(cName, fees);
+					AdminUpdateFeesOfCourse a = new AdminUpdateFeesOfCourse();
 					break;
 
 				}
 				case 3: {
-					List<Course> lisOfCourses = daoObj.getListOfCourses();
-					System.out.println("List of courses-");
-					lisOfCourses.forEach(c ->{
-						System.out.println(c.getCname());
-					});
-					System.out.println("Enter course name to delete:");
-					String cName = sc.next();
-					daoObj.adminDeleteCourse(cName);
+					AdminDeleteCourse a = new AdminDeleteCourse();
 					break;
 
 				}
 				case 4: {
-					List<Course> lisOfCourses = daoObj.getListOfCourses();
-					System.out.println("List of courses-");
-					lisOfCourses.forEach(c ->{
-						System.out.println(c.getCname());
-					});
-					System.out.println("Enter course name to get it's information");
-					String cName = sc.next();
-					daoObj.adminDisplayCourseInfo(cName);
+					AdminDisplayCourseInfo a = new AdminDisplayCourseInfo();
 					break;
 
 				}
 				case 5: {
-					System.out.println("Enter Course name:");
-					String cName = sc.next().toUpperCase();
-					System.out.println("Enter Batch no:");
-					int bId = sc.nextInt();
-					System.out.println("Enter total seats in this batch: ");
-					int totalSeats = sc.nextInt();
-					daoObj.adminCreatBatchunderaCourse(cName, bId, totalSeats);
+					AdminCreatBatchunderaCourse a = new AdminCreatBatchunderaCourse();		
 					break;
 				}
 				case 6: {
-					daoObj.adminAllocateStudentsInaBatchUnderaCourse();
+					AdminAllocateStudentsInaBatchUnderaCourse a = new AdminAllocateStudentsInaBatchUnderaCourse();
 					break;
 				}
 				case 7: {
-					daoObj.adminUpdateTotalSeatsOfaBatch();
+					AdminUpdateTotalSeatsOfaBatch a = new AdminUpdateTotalSeatsOfaBatch();
 					break;
 				}
 				case 8: {
-					daoObj.adminViewStudentsOfEveryBatch();
+					AdminViewStudentsOfEveryBatch a = new AdminViewStudentsOfEveryBatch();
 					break;
 				}
 				

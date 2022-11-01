@@ -430,7 +430,7 @@ public class daoImpl implements dao{
 		
 		List<Admin> listOfAdmins = new ArrayList<>();
 		listOfAdmins.add(new Admin("Afzhal", "netflix"));
-		listOfAdmins.add(new Admin("a", "qwe"));
+		listOfAdmins.add(new Admin("a", "q"));
 		boolean isPresent = false;
 		
 		Scanner sc = new Scanner(System.in);

@@ -22,6 +22,10 @@ So the Automated Student Management System will keep the records of all the cour
 
 [![My Skills](https://skillicons.dev/icons?i=java,spring,mysql,powershell,git,github)](http://suraj-996.github.io/)
 
+## ER diagram
+<img width="839" alt="Screenshot 2023-01-01 at 10 28 17 PM" src="https://user-images.githubusercontent.com/96117548/210178846-a755de51-b6d1-429b-9fa8-37573f61f3d4.png">
+
+
 ## Features
 
 1. Basic authentication of various user accounts (admin, student).
